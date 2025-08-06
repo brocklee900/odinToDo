@@ -1,8 +1,10 @@
 
+import { format } from 'date-fns';
+
 function createToDoItem() {
     let title = "title";
     let description = "description";
-    let dueDate = "1/11/1111";
+    let dueDate = new Date(2000, 0, 1);
     let priority = "High";
     let notes = "notes";
     let checklist = [];
@@ -18,7 +20,7 @@ function createToDoItem() {
         },
 
         get dueDate() {
-            return dueDate;
+            return format(dueDate, "MM, dd, yyyy");
         },
 
         get priority() {
