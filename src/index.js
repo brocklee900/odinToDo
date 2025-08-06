@@ -1,4 +1,11 @@
 import "./styles.css";
-import { greeting } from "./greeting.js";
+import { createToDoItem } from "./toDoItem";
 
-console.log(greeting);
+
+let itemOne = createToDoItem();
+console.log(itemOne.title);
+console.log(itemOne.description);
+console.log(itemOne.dueDate);
+console.log(itemOne.priority);
+console.log(itemOne.notes);
+console.log(itemOne.checklist);

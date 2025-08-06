@@ -1,1 +1,0 @@
-export const greeting = "boom waddup";
