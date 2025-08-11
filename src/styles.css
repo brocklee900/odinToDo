@@ -11,8 +11,48 @@ body {
     width: 100vw;
 
     display: grid;
-    grid-template-columns: clamp(175px, 20%, 300px) 4fr;
+    grid-template-columns: clamp(200px, 20%, 300px) 4fr;
     grid-template-rows: 1fr;
+}
+
+#editProjectName {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#editProjectName > form {
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px;
+    gap: 10px;
+
+    font-size: 2rem;
+}
+
+.dialogClose {
+    align-self: flex-end;
+    background: url(./images/close.svg);
+    height: 30px;
+    width: 30px;
+    border: none;
+}
+
+.dialogClose:hover {
+    box-shadow: 0px 0px 0px 1px rgb(0, 0, 0) inset;
+    cursor: pointer;
+}
+
+.dialogSubmit {
+    align-self: center;
+    font-size: 1rem;
+    width: 50%;
+}
+
+.entryPair > input {
+    font-size: 1.75rem;
 }
 
 #projectSection,
@@ -118,3 +158,4 @@ h1 {
     border-radius: 10px;
     background-color: rgb(255, 255, 255);
 }
+

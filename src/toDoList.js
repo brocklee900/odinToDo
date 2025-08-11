@@ -2,8 +2,9 @@
 import { format } from "date-fns";
 import { createToDoItem } from "./toDoItem";
 
-function createToDoList() {
-    let listName = "list";
+function createToDoList(name = "New Project", id) {
+    let projectID = id;
+    let listName = name;
     let toDoItems = [];
 
     const addToDoItem = (toDoItem) => {
@@ -21,8 +22,16 @@ function createToDoList() {
             return listName;
         },
 
+        set listName(newName) {
+            listName = newName;
+        },
+
         get toDoItems() {
             return toDoItems;
+        },
+
+        get projectID() {
+            return projectID;
         },
 
         addToDoItem,

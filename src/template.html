@@ -9,21 +9,7 @@
         <div id="projectSection">
             <h1 id="projectHeader">Projects</h1>
             <div id="projectContainer">
-                <div class="projectItem">
-                    <p>project1</p>
-                    <button class="editBtn"></button>
-                    <button class="removeBtn"></button>
-                </div>
-                <div class="projectItem">
-                    <p>project2</p>
-                    <button class="editBtn"></button>
-                    <button class="removeBtn"></button>
-                </div>
-                <div id="active" class="projectItem">
-                    <p>project3</p>
-                    <button class="editBtn"></button>
-                    <button class="removeBtn"></button>
-                </div>
+                
             </div>
             <button class="addItem">Add Project +</button>
         </div>
@@ -36,6 +22,17 @@
             </div>
         </div>
             
-        </div>
+        <dialog id="editProjectName" closeby="none">
+            <form method="dialog">
+                <button class="dialogClose" type="button"></button>
+
+                <div class="entryPair">
+                    <label for="name">New Title: </label>
+                    <input id="name" type="text" autofocus>
+                </div>
+
+            </form>
+        </dialog>
+
     </body>
 </html>
