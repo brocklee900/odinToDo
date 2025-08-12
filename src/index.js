@@ -4,18 +4,42 @@ import { listManager } from "./listManager";
 const myManager = listManager();
 const projectListDOM = document.querySelector("#projectContainer");
 const projectEditModal = document.querySelector("#editProjectName");
+const projectDOMMap = new Map();
 
-projectEditModal.querySelector(".dialogClose").addEventListener("click", (e) => {
+//Function to close project editting modal
+function closeModal() {
     projectEditModal.close();
     let form = projectEditModal.querySelector("form");
-    form.removeChild(form.lastElementChild);
     form.reset();
+};
+
+//Attaching event listener to close button on project editting modal
+projectEditModal.querySelector(".dialogClose").addEventListener("click", closeModal);
+
+//Attaching event listener to Submit button on project editting Modal
+//functionality depends on if a new project item is being added, or an existing item is being editted
+projectEditModal.querySelector(".dialogSubmit").addEventListener("click", (e) => {
+
+    let currentID = e.target.parentNode.parentNode.dataset.projectID;
+    let value = projectEditModal.querySelector("#name").value;
+    //Create new project item
+    if (currentID == "newItem") {
+        let projectID = myManager.addList(value);
+        projectListDOM.appendChild(createProjectDOM(value, projectID));
+
+    //Change the text of corresponding project item DOM
+    } else {
+        projectDOMMap.get(currentID).querySelector("p").textContent = value;
+    };
+
+    closeModal();
 });
 
 //Creating DOM display of project item
 function createProjectDOM(name, projectID) {
     let div = document.createElement("div");
     div.classList.add("projectItem");
+    projectDOMMap.set(projectID, div);
 
     let p = document.createElement("p");
     p.textContent = name;
@@ -26,18 +50,7 @@ function createProjectDOM(name, projectID) {
     div.appendChild(b);
     b.addEventListener("click", (e) => {
         projectEditModal.showModal();
-        let submitButton = document.createElement("button");
-        submitButton.classList.add("dialogSubmit");
-        submitButton.textContent = "Submit";
-        let form = projectEditModal.querySelector("form")
-        form.appendChild(submitButton);
-        submitButton.addEventListener("click", (e) => {
-            p.textContent = projectEditModal.querySelector("#name").value;
-            form.removeChild(submitButton);
-            myManager.editListName(projectID, p.textContent);
-            projectEditModal.close();
-            form.reset();
-        });
+        projectEditModal.dataset.projectID = projectID; //set dataset value so that modal knows which project item to edit
     });
 
     b = document.createElement("button");
@@ -46,6 +59,7 @@ function createProjectDOM(name, projectID) {
     b.addEventListener("click", (e) => {
         myManager.removeList(projectID);
         projectListDOM.removeChild(div);
+        projectDOMMap.delete(projectID);
     });
 
     return div;
@@ -55,19 +69,6 @@ function createProjectDOM(name, projectID) {
 document.querySelector("#projectSection > .addItem").addEventListener("click", (e) => {
 
     projectEditModal.showModal();
-    let inputName = projectEditModal.querySelector("#name");
-    inputName.value = "New Project";
-    let submitButton = document.createElement("button");
-    submitButton.classList.add("dialogSubmit");
-    submitButton.textContent = "Submit";
-    let form = projectEditModal.querySelector("form")
-    form.appendChild(submitButton);
-    submitButton.addEventListener("click", (e) => {
-        form.removeChild(submitButton);
-        let projectID = myManager.addList(inputName.value);
-        projectListDOM.appendChild(createProjectDOM(inputName.value, projectID));
-        projectEditModal.close();
-        form.reset();
-    });
+    projectEditModal.dataset.projectID = "newItem"; //set to newItem so submit button on modal knows to add new project item
 
 });
