@@ -4,6 +4,7 @@ import { createProjectItem } from "./projectItem";
 function createProjectList() {
 
     const projectList = new Map();
+    let activeProject;
 
     const addProjectItem = (name) => {
         let newID = crypto.randomUUID();
@@ -27,6 +28,13 @@ function createProjectList() {
         addProjectItem,
         removeProjectItem,
         editProjectName,
+        get activeProject() {
+            return activeProject;
+        },
+
+        set activeProject(id) {
+            activeProject = id;
+        },
     };
 };
 

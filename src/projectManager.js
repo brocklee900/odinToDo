@@ -13,6 +13,14 @@ function removeProjectItem(id) {
 
 function editProjectName(id, name) {
     projectList.editProjectName(id, name);
-}
+};
 
-export { addProjectItem, removeProjectItem, editProjectName };
+function getActiveProject() {
+    return projectList.activeProject
+};
+
+function setActiveProject(newActiveID) {
+    projectList.activeProject = newActiveID;
+};
+
+export { addProjectItem, removeProjectItem, editProjectName, getActiveProject, setActiveProject };

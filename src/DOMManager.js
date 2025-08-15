@@ -1,10 +1,27 @@
-import { addProjectItem, removeProjectItem, editProjectName } from "./projectManager";
+import { addProjectItem, removeProjectItem, editProjectName, getActiveProject, setActiveProject } from "./projectManager";
 
 
 function setupDOM() {
     const projectListDOM = document.querySelector("#projectContainer");
     const projectEditModal = document.querySelector("#editProjectName");
     const projectDOMMap = new Map();
+
+    function updateActive(newActiveID) {
+
+        //remove the active styling from the old active project item
+        if (getActiveProject() != undefined) {
+            projectDOMMap.get(getActiveProject()).removeAttribute("id");
+        };
+
+        //update the styling for the new activeID (sometimes there will be no active, so not always set)
+        if (newActiveID != undefined) {
+            projectDOMMap.get(newActiveID).setAttribute("id", "active");
+        };
+
+        //will set Active to undefined if the active project has been deleted
+        setActiveProject(newActiveID);
+        
+    };
 
     //Function to close project editting modal
     function closeModal() {
@@ -20,12 +37,13 @@ function setupDOM() {
     //functionality depends on if a new project item is being added, or an existing item is being editted
     projectEditModal.querySelector(".dialogSubmit").addEventListener("click", (e) => {
 
-        let currentID = e.target.parentNode.parentNode.dataset.projectID;
+        let currentID = getActiveProject();
         let value = projectEditModal.querySelector("#name").value;
         //Create new project item
-        if (currentID == "newItem") {
+        if (currentID == undefined) {
             let projectID = addProjectItem(value);
             projectListDOM.appendChild(createProjectDOM(value, projectID));
+            updateActive(projectID);
 
         //Change the text of corresponding project item DOM
         } else {
@@ -41,6 +59,9 @@ function setupDOM() {
 
         let div = document.createElement("div");
         div.classList.add("projectItem");
+        div.addEventListener("click", (e) => {
+            updateActive(projectID);
+        });
         projectDOMMap.set(projectID, div);
 
         let p = document.createElement("p");
@@ -51,15 +72,17 @@ function setupDOM() {
         b.classList.add("editBtn");
         div.appendChild(b);
         b.addEventListener("click", (e) => {
+            //event propagation activates the parent div event listener to update the active id
             projectEditModal.showModal();
-            projectEditModal.dataset.projectID = projectID; //set dataset value so that modal knows which project item to edit
         });
 
         b = document.createElement("button");
         b.classList.add("removeBtn");
         div.appendChild(b);
         b.addEventListener("click", (e) => {
+            e.stopPropagation(); //stop propagation to prevent the id from updating again from the parent div event listener
             removeProjectItem(projectID);
+            updateActive(undefined);
             projectListDOM.removeChild(div);
             projectDOMMap.delete(projectID);
         });
@@ -71,7 +94,7 @@ function setupDOM() {
     document.querySelector("#projectSection > .addItem").addEventListener("click", (e) => {
 
         projectEditModal.showModal();
-        projectEditModal.dataset.projectID = "newItem"; //set to newItem so submit button on modal knows to add new project item
+        updateActive(undefined);
 
     });
 };
