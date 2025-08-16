@@ -6,6 +6,8 @@ function setupDOM() {
     const projectEditModal = document.querySelector("#editProjectName");
     const projectDOMMap = new Map();
 
+
+    //update the DOM to show which project is currently selected
     function updateActive(newActiveID) {
 
         //remove the active styling from the old active project item
@@ -18,7 +20,7 @@ function setupDOM() {
             projectDOMMap.get(newActiveID).setAttribute("id", "active");
         };
 
-        //will set Active to undefined if the active project has been deleted
+        //will set Active to undefined depending on the case (project item deleted or new project to be added)
         setActiveProject(newActiveID);
         
     };
@@ -65,12 +67,16 @@ function setupDOM() {
         projectDOMMap.set(projectID, div);
 
         let p = document.createElement("p");
+        p.classList.add("title");
         p.textContent = name;
         div.appendChild(p);
 
+        let buttonsDiv = document.createElement("div");
+        buttonsDiv.classList.add("buttons");
+
         let b = document.createElement("button");
         b.classList.add("editBtn");
-        div.appendChild(b);
+        buttonsDiv.appendChild(b);
         b.addEventListener("click", (e) => {
             //event propagation activates the parent div event listener to update the active id
             projectEditModal.showModal();
@@ -78,7 +84,7 @@ function setupDOM() {
 
         b = document.createElement("button");
         b.classList.add("removeBtn");
-        div.appendChild(b);
+        buttonsDiv.appendChild(b);
         b.addEventListener("click", (e) => {
             e.stopPropagation(); //stop propagation to prevent the id from updating again from the parent div event listener
             removeProjectItem(projectID);
@@ -86,6 +92,8 @@ function setupDOM() {
             projectListDOM.removeChild(div);
             projectDOMMap.delete(projectID);
         });
+
+        div.appendChild(buttonsDiv);
 
         return div;
     };
