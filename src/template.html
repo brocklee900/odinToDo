@@ -87,13 +87,46 @@
             <button class="addItem">Add To Do +</button>
         </div>
             
-        <dialog id="editProjectName" closeby="none">
+        <dialog id="projectModal" closeby="none">
             <form method="dialog">
                 <button class="dialogClose" type="button"></button>
 
                 <div class="entryPair">
                     <label for="name">New Title: </label>
                     <input id="name" type="text" autofocus>
+                </div>
+
+                <button class="dialogSubmit" type="submit">Submit</button>
+
+            </form>
+        </dialog>
+
+        <dialog id="toDoModal" closeby="none">
+            <form method="dialog">
+                <button class="dialogClose" type="button"></button>
+
+                <div class="entryPair">
+                    <label for="name">Title: </label>
+                    <input id="name" type="text" autofocus>
+                </div>
+
+                <div class="entryPair">
+                    <label for="date">Date: </label>
+                    <input id="date" type="date">
+                </div>
+
+                <div class="entryPair">
+                    <label for="priority">Priority: </label>
+                    <select id="priority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="entryPair">
+                    <label for="notes">Notes: </label>
+                    <textarea id="notes" rows="10" cols="30">Notes</textarea>
                 </div>
 
                 <button class="dialogSubmit" type="submit">Submit</button>

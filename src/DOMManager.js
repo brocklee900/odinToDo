@@ -3,8 +3,10 @@ import { addProjectItem, removeProjectItem, editProjectName, getActiveProject, s
 
 function setupDOM() {
     const projectListDOM = document.querySelector("#projectContainer");
-    const projectEditModal = document.querySelector("#editProjectName");
+    const projectEditModal = document.querySelector("#projectModal");
     const projectDOMMap = new Map();
+
+    const toDoModal = document.querySelector("#toDoModal");
 
 
     //update the DOM to show which project is currently selected
@@ -33,11 +35,14 @@ function setupDOM() {
     };
 
     //Attaching event listener to close button on project editting modal
-    projectEditModal.querySelector(".dialogClose").addEventListener("click", closeModal);
+    projectEditModal.querySelector("#projectModal .dialogClose").addEventListener("click", closeModal);
+    toDoModal.querySelector("#toDoModal .dialogClose").addEventListener("click", (e) => {
+        toDoModal.close();
+    });
 
     //Attaching event listener to Submit button on project editting Modal
     //functionality depends on if a new project item is being added, or an existing item is being editted
-    projectEditModal.querySelector(".dialogSubmit").addEventListener("click", (e) => {
+    projectEditModal.querySelector("#projectModal .dialogSubmit").addEventListener("click", (e) => {
 
         let currentID = getActiveProject();
         let value = projectEditModal.querySelector("#name").value;
@@ -105,6 +110,12 @@ function setupDOM() {
         updateActive(undefined);
 
     });
+
+    document.querySelector("#toDoSection > .addItem").addEventListener("click", (e) => {
+        toDoModal.showModal();
+    })
+
+    
 };
 
 export { setupDOM };

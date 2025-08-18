@@ -20,14 +20,16 @@ h1 {
 }
 
 /* modal */
-#editProjectName {
+#projectModal,
+#toDoModal {
     position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
 }
 
-#editProjectName > form {
+#projectModal > form,
+#toDoModal > form {
     display: flex;
     flex-direction: column;
 
@@ -36,6 +38,8 @@ h1 {
 
     font-size: 2rem;
 }
+
+
 
 .dialogClose {
     align-self: flex-end;
@@ -56,7 +60,15 @@ h1 {
     width: 50%;
 }
 
-.entryPair > input {
+.entryPair > * {
+    font-size: 1.75rem;
+    padding: 2px;
+}
+
+.entryPair {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
     font-size: 1.75rem;
 }
 
