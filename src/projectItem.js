@@ -1,9 +1,9 @@
 
-import { format } from "date-fns";
-import { createToDoItem } from "./toDoItem";
+import { createToDoList } from "./toDoList";
 
 function createProjectItem(name = "New Project") {
     let listName = name;
+    let toDoList = createToDoList();
 
     return {
         get listName() {
@@ -12,6 +12,10 @@ function createProjectItem(name = "New Project") {
 
         set listName(newName) {
             listName = newName;
+        },
+
+        get toDoList() {
+            return toDoList;
         },
 
     };

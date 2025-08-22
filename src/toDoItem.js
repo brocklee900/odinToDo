@@ -1,13 +1,11 @@
 
 import { format } from 'date-fns';
 
-function createToDoItem() {
-    let title = "title";
-    let description = "description";
-    let dueDate = new Date(2000, 0, 1);
-    let priority = "High";
-    let notes = "notes";
-    let checklist = [];
+function createToDoItem(newTitle, newDate, newPriority, newNotes) {
+    let title = newTitle;
+    let dueDate = new Date(newDate);
+    let priority = newPriority;
+    let notes = newNotes;
 
 
     return {
@@ -15,25 +13,34 @@ function createToDoItem() {
             return title;
         },
 
-        get description() {
-            return description;
+        set title(newTitle) {
+            title = newTitle;
         },
 
         get dueDate() {
             return format(dueDate, "MM, dd, yyyy");
         },
 
+        set dueDate(newDate) {
+            dueDate = new Date(newDate);
+        },
+
         get priority() {
             return priority;
+        },
+
+        set priority(newPriority) {
+            priority = newPriority;
         },
 
         get notes() {
             return notes;
         },
 
-        get checklist() {
-            return checklist;
-        }
+        set notes(newNotes) {
+            notes = newNotes;
+        },
+
     };
 };
 

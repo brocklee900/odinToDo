@@ -4,11 +4,12 @@ import { createProjectItem } from "./projectItem";
 function createProjectList() {
 
     const projectList = new Map();
-    let activeProject;
+    let activeProjectID;
 
     const addProjectItem = (name) => {
         let newID = crypto.randomUUID();
         projectList.set(newID, createProjectItem(name));
+        projectList.get(newID).toDoList.print();
         return newID;
     };
 
@@ -20,6 +21,10 @@ function createProjectList() {
         projectList.get(idToChange).listName = name;
     };
 
+    const getProject = (id) => {
+        return projectList.get(id);
+    };
+
     const print = () => {
         console.log(projectList);
     }
@@ -28,12 +33,14 @@ function createProjectList() {
         addProjectItem,
         removeProjectItem,
         editProjectName,
-        get activeProject() {
-            return activeProject;
+        getProject,
+
+        get activeProjectID() {
+            return activeProjectID;
         },
 
-        set activeProject(id) {
-            activeProject = id;
+        set activeProjectID(id) {
+            activeProjectID = id;
         },
     };
 };

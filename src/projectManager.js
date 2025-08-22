@@ -15,14 +15,35 @@ function editProjectName(id, name) {
     projectList.editProjectName(id, name);
 };
 
-function getActiveProject() {
-    return projectList.activeProject
+function getActiveProjectID() {
+    return projectList.activeProjectID
 };
 
-function setActiveProject(newActiveID) {
-    projectList.activeProject = newActiveID;
+function setActiveProjectID(newActiveID) {
+    projectList.activeProjectID = newActiveID;
+};
+
+//private function to get the current active project's to Do List
+//used for manipulating the todo items
+function getActiveToDoList() {
+    return projectList.getProject(getActiveProjectID()).toDoList;
+};
+
+function addToDoItem(title, duedate, priority, notes) {
+    return getActiveToDoList().addToDoItem(title, duedate, priority, notes);
+};
+
+function removeToDoItem(id) {
+    getActiveToDoList().removeToDoItem(id);
+};
+
+function getActiveToDoID() {
+    return getActiveToDoList().activeToDoID;
+};
+
+function setActiveToDoID(newActiveID) {
+    getActiveToDoList().activeToDoID = newActiveID;
 };
 
 
-
-export { addProjectItem, removeProjectItem, editProjectName, getActiveProject, setActiveProject };
+export { addProjectItem, removeProjectItem, editProjectName, getActiveProjectID, setActiveProjectID, addToDoItem, removeToDoItem, getActiveToDoID, setActiveToDoID};
