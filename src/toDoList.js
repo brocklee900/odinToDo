@@ -17,9 +17,9 @@ function createToDoList() {
     };
 
     const editToDoItem = (idToChange, title, date, priority, notes) => {
-        let toDo = projectList.get(idToChange);
+        let toDo = toDoList.get(idToChange);
         toDo.title = title;
-        toDo.date = date;
+        toDo.dueDate = date;
         toDo.priority = priority;
         toDo.notes = notes;
         

@@ -37,6 +37,11 @@ function removeToDoItem(id) {
     getActiveToDoList().removeToDoItem(id);
 };
 
+function editToDoItem(id, title, duedate, priority, notes) {
+    getActiveToDoList().editToDoItem(id, title, duedate, priority, notes);
+    getActiveToDoList().print();
+};
+
 function getActiveToDoID() {
     return getActiveToDoList().activeToDoID;
 };
@@ -46,4 +51,5 @@ function setActiveToDoID(newActiveID) {
 };
 
 
-export { addProjectItem, removeProjectItem, editProjectName, getActiveProjectID, setActiveProjectID, addToDoItem, removeToDoItem, getActiveToDoID, setActiveToDoID};
+export { addProjectItem, removeProjectItem, editProjectName, getActiveProjectID, setActiveProjectID, 
+    addToDoItem, removeToDoItem, editToDoItem, getActiveToDoID, setActiveToDoID};
