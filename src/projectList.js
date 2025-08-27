@@ -9,7 +9,6 @@ function createProjectList() {
     const addProjectItem = (name) => {
         let newID = crypto.randomUUID();
         projectList.set(newID, createProjectItem(name));
-        projectList.get(newID).toDoList.print();
         return newID;
     };
 

@@ -1,5 +1,5 @@
 import { addProjectItem, removeProjectItem, editProjectName, getActiveProjectID, setActiveProjectID, 
-    addToDoItem, removeToDoItem, editToDoItem, getActiveToDoID, setActiveToDoID } from "./projectManager";
+    addToDoItem, removeToDoItem, editToDoItem, getActiveToDoID, setActiveToDoID, getActiveToDoListMap } from "./projectManager";
 import { format } from 'date-fns';
 
 function setupDOM() {
@@ -10,6 +10,37 @@ function setupDOM() {
     const toDoListDOM = document.querySelector("#toDoContainer");
     const toDoModal = document.querySelector("#toDoModal");
     const toDoDOMMap = new Map();
+
+
+    //Reset the to do list DOM (either by deleting its associated project item, of switching to a different project item)
+    function clearToDoList() {
+        while (toDoListDOM.lastElementChild) {
+            toDoListDOM.removeChild(toDoListDOM.lastElementChild);
+        };
+    };
+
+    //Update the header and footer(add button) of the toDoSection
+    //Should only occur when the active project is updated
+    function updateToDoSection(newText) {
+        let toDoHeader = document.querySelector("#toDoHeader");
+        let addBtn = document.querySelector("#toDoSection > .addItem");
+        if (newText == undefined) {
+            toDoHeader.textContent = "Create/Select a project to start adding To Do Items!";
+            addBtn.style.display = "none"; //prevent user from adding items before selecting a project
+        } else {
+            toDoHeader.textContent = newText;
+            addBtn.style.display = "block"; //make toDo add button visible after project is selected
+
+            toDoDOMMap.clear();
+            let map = getActiveToDoListMap();
+
+            setActiveToDoID(undefined);
+            map.forEach((toDoItem, id) => {
+                toDoListDOM.appendChild(createToDoDOM(toDoItem.title, toDoItem.duedate, toDoItem.priority, toDoItem.notes, id));
+                
+            });
+        };
+    };
 
     //update the DOM to show which project is currently selected
     function updateActiveProject(newActiveID) {
@@ -50,13 +81,6 @@ function setupDOM() {
 
     };
 
-    //Reset the to do list DOM (either by deleting its associated project item, of switching to a different project item)
-    function clearToDoList() {
-        while (toDoListDOM.lastElementChild) {
-            toDoListDOM.removeChild(toDoListDOM.lastElementChild);
-        };
-    };
-
     //Function to close editting modals and reset the inputs
     function closeModals() {
         projectEditModal.close();
@@ -72,6 +96,11 @@ function setupDOM() {
     projectEditModal.querySelector(".dialogClose").addEventListener("click", closeModals);
     toDoModal.querySelector(".dialogClose").addEventListener("click", closeModals);
 
+    let addStatus = 0; //1 if addItem button was clicked, 0 if not (modal triggered by edit button)
+    function setAddStatus(num) {
+        addStatus = num;
+    };
+
     //Attaching event listener to Submit button on project editting Modal
     //functionality depends on if a new project item is being added, or an existing item is being editted
     projectEditModal.querySelector(".dialogSubmit").addEventListener("click", (e) => {
@@ -81,7 +110,7 @@ function setupDOM() {
         let value = projectEditModal.querySelector("#name").value == "" ? "New Project" : projectEditModal.querySelector("#name").value;
         
         //Create new project item
-        if (currentID == undefined) {
+        if (addStatus == 1) {
             let projectID = addProjectItem(value);
             projectListDOM.appendChild(createProjectDOM(value, projectID));
             updateActiveProject(projectID);
@@ -92,30 +121,31 @@ function setupDOM() {
             editProjectName(currentID, value);
         };
 
+        updateToDoSection(value);
         closeModals();
     });
 
-    //not sure what to do with the duedate format yet
     toDoModal.querySelector(".dialogSubmit").addEventListener("click", (e) => {
-;
+
         let currentToDo = getActiveToDoID();
 
         //values will go to default if the user leaves them blank
         let title = toDoModal.querySelector("#title").value == "" ? "New Item" : toDoModal.querySelector("#title").value;
-        let duedate = toDoModal.querySelector("#date").value == "" ? new Date() : toDoModal.querySelector("#date").value;
+        let duedate = format(toDoModal.querySelector("#date").value == "" ? new Date() : toDoModal.querySelector("#date").value, "MM/dd/yyyy");
         let priority = toDoModal.querySelector("#priority").value;
         let notes = toDoModal.querySelector("#notes").value == "" ? "No Notes" : toDoModal.querySelector("#notes").value;
 
-        if (currentToDo == undefined) {
+        //Create new toDo item
+        if (addStatus == 1) {
             let toDoID = addToDoItem(title, duedate, priority, notes);
             toDoListDOM.appendChild(createToDoDOM(title, duedate, priority, notes, toDoID));
             updateActiveToDo(toDoID);
+
+        //Edit existing toDo item
         } else {
             let toDoItem = toDoDOMMap.get(currentToDo);
-            console.log(toDoItem.querySelector(".title"));
             toDoItem.querySelector(".title").textContent = title;
-            console.log(toDoItem.querySelector(".duedate"));
-            toDoItem.querySelector(".duedate").textContent = format(new Date(duedate), "MM/dd/yyyy");
+            toDoItem.querySelector(".duedate").textContent = duedate;
             toDoItem.classList.remove("priorityLow", "priorityMedium", "priorityHigh");
             if (priority == "low") {
                 toDoItem.classList.add("priorityLow");
@@ -139,6 +169,7 @@ function setupDOM() {
         div.classList.add("projectItem");
         div.addEventListener("click", (e) => {
             updateActiveProject(projectID);
+            updateToDoSection(name);
         });
         projectDOMMap.set(projectID, div);
 
@@ -156,6 +187,7 @@ function setupDOM() {
         b.addEventListener("click", (e) => {
             //event propagation activates the parent div event listener to update the active id
             projectEditModal.showModal();
+            setAddStatus(0);
         });
 
         b = document.createElement("button");
@@ -164,7 +196,8 @@ function setupDOM() {
         b.addEventListener("click", (e) => {
             e.stopPropagation(); //stop propagation to prevent the id from updating again from the parent div event listener
             removeProjectItem(projectID);
-            if (getActiveProjectID == projectID) {
+            if (getActiveProjectID() == projectID) {                
+                updateToDoSection(undefined);
                 updateActiveProject(undefined);
             };
             projectListDOM.removeChild(div);
@@ -176,6 +209,7 @@ function setupDOM() {
         return div;
     };
 
+    //Create DOM display of toDo item
     function createToDoDOM(title, duedate, priority, notes, toDoID) {
 
         let div = document.createElement("div");
@@ -204,7 +238,7 @@ function setupDOM() {
 
         p = document.createElement("p");
         p.classList.add("duedate");
-        p.textContent = format(new Date(duedate), "MM/dd/yyyy"); //not sure what to do with date yet
+        p.textContent = duedate; //not sure what to do with date yet
         headerDiv.appendChild(p);
 
         //buttonsDiv
@@ -215,6 +249,7 @@ function setupDOM() {
         b.classList.add("editBtn");
         b.addEventListener("click", (e) => {
             toDoModal.showModal();
+            setAddStatus(0);
         });
         buttonsDiv.appendChild(b);
 
@@ -223,7 +258,7 @@ function setupDOM() {
         b.addEventListener("click", (e) => {
             e.stopPropagation(); //stop propagation to prevent the id from updating again from the parent div event listener
             removeToDoItem(toDoID);
-            if (getActiveToDoID == toDoID) {
+            if (getActiveToDoID() == toDoID) {
                 updateActiveToDo(undefined); //only remove the active id if the current active to do is being removed
             };
             toDoListDOM.removeChild(div);
@@ -246,22 +281,21 @@ function setupDOM() {
 
     };
 
-    //Button to add projects to the project list
+    //Button to show project modal to add new projects to the project list
     document.querySelector("#projectSection > .addItem").addEventListener("click", (e) => {
-
         projectEditModal.showModal();
-        updateActiveProject(undefined);
-
+        setAddStatus(1);
     });
 
+    //Button to show toDo modal to add new toDo's to the current active project item
     document.querySelector("#toDoSection > .addItem").addEventListener("click", (e) => {
-
         toDoModal.showModal();
-        updateActiveToDo(undefined);
+        setAddStatus(1);
+    });
 
-    })
-
-    
+    //functions to run when the page first loads
+    updateToDoSection(undefined);
 };
+
 
 export { setupDOM };

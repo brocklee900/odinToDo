@@ -1,9 +1,7 @@
 
-import { format } from 'date-fns';
-
 function createToDoItem(newTitle, newDate, newPriority, newNotes) {
     let title = newTitle;
-    let dueDate = new Date(newDate);
+    let duedate = newDate;
     let priority = newPriority;
     let notes = newNotes;
 
@@ -17,12 +15,12 @@ function createToDoItem(newTitle, newDate, newPriority, newNotes) {
             title = newTitle;
         },
 
-        get dueDate() {
-            return format(dueDate, "MM, dd, yyyy");
+        get duedate() {
+            return duedate;
         },
 
-        set dueDate(newDate) {
-            dueDate = new Date(newDate);
+        set duedate(newDate) {
+            duedate = newDate;
         },
 
         get priority() {

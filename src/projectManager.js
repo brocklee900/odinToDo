@@ -29,6 +29,10 @@ function getActiveToDoList() {
     return projectList.getProject(getActiveProjectID()).toDoList;
 };
 
+function getActiveToDoListMap() {
+    return getActiveToDoList().map;
+};
+
 function addToDoItem(title, duedate, priority, notes) {
     return getActiveToDoList().addToDoItem(title, duedate, priority, notes);
 };
@@ -39,7 +43,6 @@ function removeToDoItem(id) {
 
 function editToDoItem(id, title, duedate, priority, notes) {
     getActiveToDoList().editToDoItem(id, title, duedate, priority, notes);
-    getActiveToDoList().print();
 };
 
 function getActiveToDoID() {
@@ -52,4 +55,4 @@ function setActiveToDoID(newActiveID) {
 
 
 export { addProjectItem, removeProjectItem, editProjectName, getActiveProjectID, setActiveProjectID, 
-    addToDoItem, removeToDoItem, editToDoItem, getActiveToDoID, setActiveToDoID};
+    addToDoItem, removeToDoItem, editToDoItem, getActiveToDoID, setActiveToDoID, getActiveToDoListMap};

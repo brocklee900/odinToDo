@@ -19,7 +19,7 @@ function createToDoList() {
     const editToDoItem = (idToChange, title, date, priority, notes) => {
         let toDo = toDoList.get(idToChange);
         toDo.title = title;
-        toDo.dueDate = date;
+        toDo.duedate = date;
         toDo.priority = priority;
         toDo.notes = notes;
         
@@ -33,7 +33,6 @@ function createToDoList() {
         addToDoItem,
         removeToDoItem,
         editToDoItem,
-        print,
 
         get activeToDoID() {
             return activeToDoID;
@@ -42,6 +41,10 @@ function createToDoList() {
         set activeToDoID(id) {
             activeToDoID = id;
         },
+
+        get map() {
+            return toDoList;
+        }
 
     };
 };
