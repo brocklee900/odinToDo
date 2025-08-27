@@ -24,6 +24,7 @@ function setupDOM() {
     function updateToDoSection(newText) {
         let toDoHeader = document.querySelector("#toDoHeader");
         let addBtn = document.querySelector("#toDoSection > .addItem");
+        clearToDoList();
         if (newText == undefined) {
             toDoHeader.textContent = "Create/Select a project to start adding To Do Items!";
             addBtn.style.display = "none"; //prevent user from adding items before selecting a project
@@ -53,7 +54,6 @@ function setupDOM() {
         //update the styling for the newly selected project (if undefined, there will be no active project)
         if (newActiveID != undefined) {
             projectDOMMap.get(newActiveID).setAttribute("id", "active");
-            clearToDoList();
         };
 
         //update the activeID in the projectList object
@@ -185,6 +185,7 @@ function setupDOM() {
         b.classList.add("editBtn");
         buttonsDiv.appendChild(b);
         b.addEventListener("click", (e) => {
+            e.stopPropagation();
             //event propagation activates the parent div event listener to update the active id
             projectEditModal.showModal();
             setAddStatus(0);
