@@ -1,4 +1,5 @@
 import "./styles.css";
-import { setupDOM } from "./DOMManager";
+import {setUpDOM} from "./projectDOM";
 
-setupDOM();
+setUpDOM();
+
