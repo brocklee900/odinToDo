@@ -1,9 +1,10 @@
 
-function createToDoItem(newTitle, newDate, newPriority, newNotes) {
+function createToDoItem(newTitle, newDate, newPriority, newNotes, id) {
     let title = newTitle;
     let duedate = newDate;
     let priority = newPriority;
     let notes = newNotes;
+    let toDoID = id; 
 
 
     return {
@@ -37,6 +38,10 @@ function createToDoItem(newTitle, newDate, newPriority, newNotes) {
 
         set notes(newNotes) {
             notes = newNotes;
+        },
+
+        get toDoID() {
+            return toDoID;
         },
 
     };

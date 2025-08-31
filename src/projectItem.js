@@ -1,9 +1,10 @@
 
 import { createToDoList } from "./toDoList";
 
-function createProjectItem(name = "New Project") {
+function createProjectItem(name = "New Project", id) {
     let listName = name;
-    let toDoList = createToDoList();
+    let projectID = id;
+    createToDoList(id);
 
     return {
         get listName() {
@@ -14,10 +15,15 @@ function createProjectItem(name = "New Project") {
             listName = newName;
         },
 
+        get projectID() {
+            return projectID;
+        },
+
+        /*
         get toDoList() {
             return toDoList;
         },
-
+        */
     };
 };
 

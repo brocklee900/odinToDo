@@ -1,5 +1,5 @@
 
-import { addToDoItem, removeToDoItem, editToDoItem, getActiveToDoID, setActiveToDoID, getActiveToDoListMap } from "./projectManager";
+import { addToDoItem, removeToDoItem, editToDoItem, getActiveToDoID, setActiveToDoID, getActiveToDoList } from "./objectManager";
 import { format } from 'date-fns';
 
 const toDoListDOM = document.querySelector("#toDoContainer");
@@ -60,6 +60,7 @@ toDoModal.querySelector(".dialogSubmit").addEventListener("click", (e) => {
     //Edit existing toDo item
     } else {
         let toDoItem = toDoDOMMap.get(currentToDo);
+        
         toDoItem.querySelector(".title").textContent = title;
         toDoItem.querySelector(".duedate").textContent = duedate;
         toDoItem.classList.remove("priorityLow", "priorityMedium", "priorityHigh");
@@ -117,6 +118,8 @@ function createToDoDOM(title, duedate, priority, notes, toDoID) {
     let b = document.createElement("button");
     b.classList.add("editBtn");
     b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        updateActiveToDo(toDoID);
         toDoModal.showModal();
         setAddStatus(0);
     });
@@ -176,12 +179,11 @@ function updateToDoSection(newText) {
         addBtn.style.display = "block"; //make toDo add button visible after project is selected
 
         toDoDOMMap.clear();
-        let map = getActiveToDoListMap();
+        let toDoList = getActiveToDoList();
 
         setActiveToDoID(undefined);
-        map.forEach((toDoItem, id) => {
-            toDoListDOM.appendChild(createToDoDOM(toDoItem.title, toDoItem.duedate, toDoItem.priority, toDoItem.notes, id));
-            
+        toDoList.forEach((toDoItem) => {
+            toDoListDOM.appendChild(createToDoDOM(toDoItem.title, toDoItem.duedate, toDoItem.priority, toDoItem.notes, toDoItem.toDoID));
         });
     };
 };

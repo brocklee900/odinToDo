@@ -1,10 +1,17 @@
-import { addProjectItem, removeProjectItem, editProjectName, getActiveProjectID, setActiveProjectID } from "./projectManager";
+import { addProjectItem, removeProjectItem, editProjectName, getActiveProjectID, setActiveProjectID } from "./objectManager";
 import { updateToDoSection } from "./toDoDOM";
+import { retrieveProjects } from "./storage";
 
 function setUpDOM() {
     const projectListDOM = document.querySelector("#projectContainer");
     const projectEditModal = document.querySelector("#projectModal");
     const projectDOMMap = new Map();
+
+    //populate the project items from the saved local storage data
+    retrieveProjects().forEach((project) => {
+        projectListDOM.append(createProjectDOM(project.listName, project.projectID));
+    });
+
 
     let addStatus = 0; //1 if addItem button was clicked, 0 if not (modal triggered by edit button)
     function setAddStatus(num) {
@@ -89,6 +96,8 @@ function setUpDOM() {
         b.addEventListener("click", (e) => {
             e.stopPropagation();
             //event propagation activates the parent div event listener to update the active id
+            updateActiveProject(projectID);
+            updateToDoSection(name);
             projectEditModal.showModal();
             setAddStatus(0);
         });
