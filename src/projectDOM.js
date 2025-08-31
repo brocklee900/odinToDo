@@ -14,8 +14,13 @@ function setUpDOM() {
 
 
     let addStatus = 0; //1 if addItem button was clicked, 0 if not (modal triggered by edit button)
-    function setAddStatus(num) {
+    //Open modal. If editting an existing project, prepopulate the inputs with existing data
+    function openModal(num, name) {
         addStatus = num;
+        if (num == 0) {
+            projectEditModal.querySelector("#name").value = name;
+        }
+        projectEditModal.showModal();
     };
 
     //Function to close editting modals and reset the inputs
@@ -98,8 +103,7 @@ function setUpDOM() {
             //event propagation activates the parent div event listener to update the active id
             updateActiveProject(projectID);
             updateToDoSection(name);
-            projectEditModal.showModal();
-            setAddStatus(0);
+            openModal(0, name);
         });
 
         b = document.createElement("button");
@@ -123,8 +127,7 @@ function setUpDOM() {
 
     //Button to show project modal to add new projects to the project list
     document.querySelector("#projectSection > .addItem").addEventListener("click", (e) => {
-        projectEditModal.showModal();
-        setAddStatus(1);
+        openModal(1);
     });
 
     updateToDoSection(undefined);

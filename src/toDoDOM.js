@@ -6,10 +6,6 @@ const toDoListDOM = document.querySelector("#toDoContainer");
 const toDoModal = document.querySelector("#toDoModal");
 const toDoDOMMap = new Map();
 
-let addStatus = 0; //1 if addItem button was clicked, 0 if not (modal triggered by edit button)
-function setAddStatus(num) {
-    addStatus = num;
-};
 
 //Update DOM to show which toDo item is currently selected
 function updateActiveToDo(newActiveID) {
@@ -28,6 +24,19 @@ function updateActiveToDo(newActiveID) {
     //if undefined, there is no active project item currently
     setActiveToDoID(newActiveID);
 
+};
+
+let addStatus = 0; //1 if addItem button was clicked, 0 if not (modal triggered by edit button)
+//Open modal. If editting exisitng toDoItem, prepopulate the inputs with the existing data
+function openModal(num, title, duedate, priority, notes) {
+    addStatus = num;
+    if (num == 0) {
+        toDoModal.querySelector("#title").value = title;
+        toDoModal.querySelector("#date").value = new Date(duedate).toISOString().substring(0, 10);
+        toDoModal.querySelector("#priority").value = priority;
+        toDoModal.querySelector("#notes").value = notes;
+    };
+    toDoModal.showModal();
 };
 
 //Function to close editting modals and reset the inputs
@@ -120,8 +129,7 @@ function createToDoDOM(title, duedate, priority, notes, toDoID) {
     b.addEventListener("click", (e) => {
         e.stopPropagation();
         updateActiveToDo(toDoID);
-        toDoModal.showModal();
-        setAddStatus(0);
+        openModal(0, title, duedate, priority, notes);
     });
     buttonsDiv.appendChild(b);
 
@@ -154,8 +162,7 @@ function createToDoDOM(title, duedate, priority, notes, toDoID) {
 
 //Button to show toDo modal to add new toDo's to the current active project item
 document.querySelector("#toDoSection > .addItem").addEventListener("click", (e) => {
-    toDoModal.showModal();
-    setAddStatus(1);
+    openModal(1);
 });
 
 //Reset the to do list DOM (either by deleting its associated project item, of switching to a different project item)

@@ -19,11 +19,6 @@ function createProjectItem(name = "New Project", id) {
             return projectID;
         },
 
-        /*
-        get toDoList() {
-            return toDoList;
-        },
-        */
     };
 };
 
